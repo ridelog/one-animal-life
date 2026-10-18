@@ -2,10 +2,10 @@
 
 40種類・55通りの境遇をたどる、ブラウザで遊べる動物の一生シミュレーション。
 
-公開サイト: https://ridelog.github.io/one-animal-life/
+公開サイト: https://one-animal-life.pearly-flute-7465.chatgpt.site/
 
 ## 公開
-GitHub Pagesで `main` ブランチの `/ (root)` を公開します。ビルドや外部サービスは不要です。
+ソースはGitHubで管理し、公開サイトはアカウント名を含まない上記URLで提供します。
 
 ## ローカル表示
 `python3 -m http.server 8000` で起動し、ブラウザで開いてください。
