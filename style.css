@@ -2,3 +2,5 @@
 .barrow{grid-template-columns:minmax(130px,1.8fr) 1fr 60px;line-height:1.6}.ecology{border-top:1px solid var(--line);padding:12px 0}.ecology summary{cursor:pointer;font-size:13px;color:var(--teal)}#clockStatus{margin-left:auto;color:var(--teal)}.decision:before{content:'時間を止めています';display:block;font-size:12px;font-weight:bold;color:var(--wine);margin-bottom:8px}@media(max-width:750px){#clockStatus{margin-left:0;flex-basis:100%}.barrow{grid-template-columns:minmax(120px,1.7fr) 1fr 55px}}
 
 .catalog-search{font-size:13px;display:block;margin:20px 0}.catalog-search input{display:block;width:100%;font:inherit;padding:10px;margin-top:7px;color:var(--ink);background:var(--bg);border:1px solid var(--line)}.catalog-group{margin-top:24px}.catalog-entry{border-top:1px solid var(--line);padding:12px 0}.catalog-entry summary{cursor:pointer}.catalog-entry summary small{float:right}.catalog-entry .ecology{border:0;padding:0}#allAnimals{margin-top:12px}#modal [hidden]{display:none!important}
+
+.event.difficult p{color:#a1483c}.event.hopeful .tag{color:#326b60}.event.difficult .tag{color:#a1483c}

@@ -96,7 +96,7 @@ function resolveTrial(n){
  if(trial.done)return;
  const selected=Number.isInteger(n)&&n>=0&&n<trial.options.length?n:0,o=trial.options[selected];
  const chance=Math.max(.2,o.chance-(life.stats.health<35?.15:0));const success=trial.roll<chance,changes=success?o.gain:o.loss;
- trial.done=true;trial.selected=selected;trial.success=success;trial.result=o[success?'good':'bad'];
+ trial.done=true;trial.selected=selected;trial.success=success;trial.result=o[success?'good':'bad'];trial.echoes=trialAftermath(trial);
  const labels={health:'健康',safety:'安心',bond:'つながり',food:'食べ物'};
  trial.changes=Object.entries(changes).map(([key,delta])=>{const before=life.stats[key];life.stats[key]=Math.max(5,Math.min(100,before+delta));const actual=life.stats[key]-before;return labels[key]+' '+(actual>0?'+':'')+actual}).join(' · ');
  life.events.push({p:life.progress,tag:'試練の結果',text:o.label+'。'+trial.result});
