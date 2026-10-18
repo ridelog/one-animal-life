@@ -30,7 +30,7 @@ function ageAt(p=life.progress){const a=animal(),n=life.span*p,epsilon=1e-8;if(p
 
 function certificate(){view='cert';const a=animal();app.innerHTML=`<div class="cert"><div class="certhead"><span class="serif">出生の記録</span><span class="mono">No. ${esc(life.serial)}</span></div><div class="certbody"><small>あなたは</small><h1>${a.species}として、生まれました。</h1>${a.scientificName?`<p class="small"><i>${esc(a.scientificName)}</i></p>`:''}<p class="lead">${a.opening}</p><p class="small">この一生は約${settings.duration}分で流れます。一時停止・倍速ができます。途中で閉じても、このブラウザで続きを再開できます。</p><div class="fields">${[['種・分類',a.species+'／'+a.group],['性別',life.sex],['出生地',a.place],['この物語で暮らす場所',a.habitat],['人との関わり',a.care],['物語上の寿命の目安',a.span+a.unit+'前後']].map(([l,v])=>`<div><small>${l}</small><b>${v}</b></div>`).join('')}</div><div class="band"><span class="pill">選べない始まり</span>あなたには、まだこの場所のほかに世界があることがわかりません。</div>${ecologyHtml(a)}<h3>同じ瞬間に、生まれた命</h3>${life.companions.map(c=>{const x=findAnimal(c.id);return`<div class="comp">${x.species}<small>${x.place} · ${x.habitat}</small></div>`}).join('')}<p class="note">寿命・境遇・出来事は物語のための設定です。実際の統計による将来予測ではありません。</p></div><div class="certactions"><button id="begin" class="primary">一生を始める</button></div></div>`;$('#begin').onclick=()=>{paused=false;renderLife()};window.scrollTo(0,0)}
 function statBars(){return Object.entries(life.stats).map(([key,n],i)=>`<div class="stat"><div class="statlabel"><span>${{health:'健康',safety:'安心',bond:'つながり',food:'食べ物'}[key]}</span><b>${n}</b></div><div class="track"><i style="width:${n}%;background:${['#4b7a5d','#9d8045','#822c46','#356e68'][i]}"></i></div></div>`).join('')}
-function renderLife(){stop();view='life';const a=animal();app.innerHTML=`<header class="toolbar"><div class="toolbar-inner"><div class="toolbarline">${title()}<span class="small">現在の年齢</span><span class="age" id="age">${ageAt()}</span><span class="small">${a.species} · ${a.place} · 一生の目安 約${settings.duration}分</span><span class="small" id="clockStatus" role="status"></span></div><div class="progress"><i id="progress" style="width:${life.progress*100}%"></i></div><div class="controls"><button id="pause">一時停止</button>${[1,2,4,8,16].map(n=>`<button data-speed="${n}" aria-pressed="${speed===n}">${n}×</button>`).join('')}<button id="next">次のできごとまで »</button><button id="auto" aria-pressed="${auto}">おまかせ</button><button id="reflectToggle" aria-pressed="${settings.reflection}">✎ ひと息</button><button id="exit">中断</button></div></div></header><main class="lifelayout"><aside class="leftcol"><section class="panel identity"><small class="mono">身元記録 · ${esc(life.serial)}</small><h2>${a.species}</h2>${[['性別',life.sex],['出生地',a.place],['居場所',a.habitat],['人との関わり',a.care]].map(([k,v])=>`<div class="defrow"><span>${k}</span><b>${v}</b></div>`).join('')}<p class="mono" style="color:var(--muted)">I&lt;LIFE&lt;&lt;${a.id.toUpperCase()}&lt;&lt;&lt;&lt;&lt;</p></section><section class="panel"><h3>状態 <small>0–100</small></h3><div id="stats">${statBars()}</div><p class="note">物語の中の状態を表す創作上の指標です。</p></section></aside><div class="maincol"><div class="scenecontainer"><canvas id="scene" width="750" height="250" class="scene" role="img" aria-label="${a.habitat}にいる${a.species}のピクセル画"></canvas><div class="scenecap">${a.place} · ${a.habitat}</div></div><div id="decision"></div><section class="panel"><div class="feedhead"><h3>一生の記録</h3><small>左の年齢＝出来事が起きた時 · 新しい順 · ☆で心に留める</small></div><p class="small" id="phase">${phase()}</p><div id="feed">${feedHtml()}</div></section></div><aside class="rightcol"><section class="panel"><h3>同じ瞬間に生まれた命</h3><div id="companions">${companionsHtml()}</div><p class="note">一生の経過割合をそろえて表示しています。実時間や年齢が同一という意味ではありません。</p></section><section class="panel"><h3>一生の地図</h3><div class="lifemap" id="lifemap">${mapHtml()}</div><p class="note">1マス＝この一生の1%。<br>色のついたマスが、過ごした時間です。</p></section><section class="panel"><h3>この命の背景</h3><p class="small">${a.care}</p>${ecologyHtml(a)}<button id="lifeSources">数の根拠と創作について</button></section></aside></main>`;
+function renderLife(){stop();view='life';const a=animal();app.innerHTML=`<header class="toolbar"><div class="toolbar-inner"><div class="toolbarline">${title()}<span class="small">現在の年齢</span><span class="age" id="age">${ageAt()}</span><span class="small">${a.species} · ${a.place} · 一生の目安 約${settings.duration}分</span><span class="small" id="clockStatus" role="status"></span></div><div class="progress"><i id="progress" style="width:${life.progress*100}%"></i></div><div class="controls"><button id="pause">一時停止</button>${[1,2,4,8,16].map(n=>`<button data-speed="${n}" aria-pressed="${speed===n}">${n}×</button>`).join('')}<button id="next">次のできごとまで »</button><button id="auto" aria-pressed="${auto}">おまかせ</button><button id="reflectToggle" aria-pressed="${settings.reflection}">✎ ひと息</button><button id="exit">中断</button></div></div></header><main class="lifelayout"><aside class="leftcol"><section class="panel identity"><small class="mono">身元記録 · ${esc(life.serial)}</small><h2>${a.species}</h2>${[['性別',life.sex],['出生地',a.place],['居場所',a.habitat],['人との関わり',a.care]].map(([k,v])=>`<div class="defrow"><span>${k}</span><b>${v}</b></div>`).join('')}<p class="mono" style="color:var(--muted)">I&lt;LIFE&lt;&lt;${a.id.toUpperCase()}&lt;&lt;&lt;&lt;&lt;</p></section><section class="panel"><h3>状態 <small>0–100</small></h3><div id="stats">${statBars()}</div><p class="note">物語の中の状態を表す創作上の指標です。</p></section></aside><div class="maincol"><div class="scenecontainer"><canvas id="scene" width="750" height="250" class="scene" role="img" aria-label="${a.habitat}にいる${a.species}のピクセル画"></canvas><div class="scenecap">${a.place} · ${a.habitat}</div></div><div id="decision"></div><section class="panel"><div class="feedhead"><h3>一生の記録</h3><small>左の年齢＝出来事が起きた時 · 新しい順 · ☆で心に留める</small></div><p class="small" id="phase">${phase()}</p><div id="feed">${feedHtml()}</div></section></div><aside class="rightcol"><section class="panel"><h3>同じ瞬間に生まれた命</h3><div id="companions">${companionsHtml()}</div><p class="note">一生の経過割合をそろえて表示しています。実時間や年齢が同一という意味ではありません。</p></section><section class="panel"><h3>一生の地図</h3><div class="lifemap" id="lifemap">${mapHtml()}</div><p class="note">1マス＝この一生の1%。<br>色のついたマスが、過ごした時間です。</p></section><section class="panel"><h3>この命の背景</h3><p class="small">${a.care}</p>${ecologyHtml(a)}${deathSourcesHtml(a)}<button id="lifeSources">数の根拠と創作について</button></section></aside></main>`;
 $('#pause').onclick=()=>{paused=!paused;updateButtons()};document.querySelectorAll('[data-speed]').forEach(b=>b.onclick=()=>{speed=Number(b.dataset.speed);updateButtons()});$('#next').onclick=nextEvent;$('#auto').onclick=()=>{auto=!auto;updateButtons();if(auto&&life.pending){resolvePending(0)}};$('#reflectToggle').onclick=()=>{settings.reflection=!settings.reflection;persist();updateButtons()};$('#exit').onclick=()=>{paused=true;persist();home();window.scrollTo(0,0)};$('#lifeSources').onclick=sources;wireStars();drawScene();updateButtons();if(life.pending)showPending();if(life.ended){const box=$('#decision');if(box){box.innerHTML='<div class="decision"><h3>この命は、ここで一生を終えました。</h3><p>'+esc(life.death?.text||'')+'</p><button id="viewEnding" class="primary">一生の記録を見る →</button></div>';$('#viewEnding').onclick=ending;}}timer=setInterval(()=>{if(!paused&&!life.pending)advance(1/(settings.duration*60)*speed)},1000);window.scrollTo(0,0)}
 function phase(){return life.progress<.15?'幼少期 · 小さな世界を覚えていきます。':life.progress<.65?'成長期 · その場所で、生きていきます。':life.progress<.85?'成熟期 · 日々の習慣が積み重なります。':'晩年 · 過ごしてきた時間をたどります。'}
 function feedHtml(){return [...life.events].reverse().map((e,rev)=>`<article class="event new"><div class="when">${ageAt(e.p)}<br><button data-star="${life.events.length-1-rev}" aria-label="この記録を心に留める" aria-pressed="${!!e.star}">${e.star?'★':'☆'}</button></div><div>${e.tag?`<span class="tag">${esc(e.tag)}</span>`:''}<p>${esc(e.text)}</p></div></article>`).join('')}
@@ -41,7 +41,7 @@ function updateButtons(){if(!$('#pause'))return;$('#pause').textContent=paused?'
 function storyEvents(){const a=animal();return [...a.events.map((text,index)=>({p:a.eventAges?Math.min(a.eventAges[index]/life.span,.95):[.08,.2,.42,.65,.88][index],index,text})),...(a.lateEvents||[]).filter(e=>e.age<life.span).map(e=>({p:e.age/life.span,text:e.text}))];}
 function choicePoint(){return animal().choiceAge?Math.min(animal().choiceAge/life.span,.96):.55}
 function milestones(){return [...new Set([...storyEvents().map(e=>e.p),.3,choicePoint(),.78,.93,1])].sort((a,b)=>a-b)}
-function recoverRecords(){if(!life)return;const a=animal();if(!a)return;for(const {p,text} of storyEvents()){const existing=life.events.find(e=>e.text===text);if(existing)existing.p=p;else if(life.progress>=p)life.events.push({p,text})}life.events.sort((a,b)=>a.p-b.p);life.stage=milestones().filter(p=>p<=life.progress).length;persist()}
+function recoverRecords(){if(!life)return;if(!life.ended&&life.death?.modelVersion!==2){life.death=null;life.events=life.events.filter(e=>!(e.p===.93&&e.tag==='できごと'));}const a=animal();if(!a)return;for(const {p,text} of storyEvents()){const existing=life.events.find(e=>e.text===text);if(existing)existing.p=p;else if(life.progress>=p)life.events.push({p,text})}life.events.sort((a,b)=>a.p-b.p);life.stage=milestones().filter(p=>p<=life.progress).length;persist()}
 function updateClockStatus(){const el=$('#clockStatus');if(!el)return;const remaining=Math.max(0,Math.ceil(((milestones()[life.stage]??1)-life.progress)*settings.duration*60/speed));el.textContent=life.pending?(life.pending==='choice'?'選択待ち · 下の選択肢を選ぶと進みます':'ひと息 · 「この一生を続ける」で進みます'):paused?'一時停止中 · 「再開」で進みます':`時間が流れています · 次の節目まで ${remaining}秒`;}
 
 function advance(amount){if(life.ended||view!=='life')return;const target=Math.min(life.progress+amount,1);let next=milestones()[life.stage];while(next!==undefined&&target>=next){life.progress=next;life.stage++;atMilestone(next);if(life.ended||life.pending)break;next=milestones()[life.stage]}if(!life.ended&&!life.pending)life.progress=target;if(view==='life')refresh();persist()}
@@ -51,49 +51,90 @@ function atMilestone(p){const a=animal();if(p===1){finish();return}if(p===.93){l
 function showPending(){if(!life.pending||!$('#decision'))return;const a=animal();if(life.pending==='choice'){$('#decision').innerHTML=`<div class="decision"><small>いま、選べること</small><h3>${a.decision.title}</h3><p>${a.decision.body}</p>${a.decision.options.map((o,i)=>`<button data-option="${i}">${o[0]} →</button>`).join('')}</div>`;document.querySelectorAll('[data-option]').forEach(b=>b.onclick=()=>resolvePending(Number(b.dataset.option)))}else{$('#decision').innerHTML=`<div class="decision"><small>ひと息</small><h3>${life.pending==='reflectYoung'?'この命にとって、安心とは何でしょう。':'ここまで、どんな時間を過ごしたでしょう。'}</h3><label for="reflection" class="small">思ったことを一行（このブラウザに保存）</label><textarea id="reflection" maxlength="300" style="display:block;width:100%;min-height:75px;background:var(--paper);border:1px solid var(--line);padding:10px"></textarea><button id="continue">この一生を続ける →</button></div>`;$('#continue').onclick=()=>resolvePending()};updateButtons()}
 function resolvePending(n){if(life.pending==='choice'){const o=animal().decision.options[n||0];life.events.push({p:life.progress,tag:'選択',text:o[1]});life.stats.health=Math.max(5,Math.min(100,life.stats.health+o[2]));life.stats.bond=Math.max(5,Math.min(100,life.stats.bond+o[3]));life.decided=true}else{const text=$('#reflection')?.value.trim();if(text){life.reflections.push(text);life.events.push({p:life.progress,tag:'あなたのひとこと',text})}}life.pending=null;if($('#decision'))$('#decision').innerHTML='';refresh();updateButtons();persist()}
 function refresh(){if(!$('#age'))return;$('#age').textContent=ageAt();$('#progress').style.width=(life.progress*100)+'%';$('#stats').innerHTML=statBars();const feed=feedHtml();if($('#feed').innerHTML!==feed){$('#feed').innerHTML=feed;wireStars()}updateClockStatus();$('#phase').textContent=phase();$('#companions').innerHTML=companionsHtml();$('#lifemap').innerHTML=mapHtml();wireStars();if(animal().adultAge){const nextVisual=life.span*life.progress<animal().adultAge?'young':'adult';if(life.visualStage!==nextVisual){life.visualStage=nextVisual;drawScene()}}}
-// Death causes are narrative possibilities, not species-specific mortality statistics.
+// Candidate causes follow species ecology and setting. Selection is fiction, not measured mortality rates.
+const DEATH_REFERENCES={
+ pets:{title:'RVC · 犬猫の健康と死亡原因の研究',url:'https://www.rvc.ac.uk/vetcompass/about/overview'},
+ cat:{title:'RVC · 猫の慢性腎臓病',url:'https://www.rvc.ac.uk/vetcompass/news/chronic-kidney-disease-in-cats-explored'},
+ horse:{title:'MSD · 馬の疝痛',url:'https://www.merckvetmanual.com/digestive-system/colic-in-horses/overview-of-colic-in-horses'},
+ zoo:{title:'MSD · 動物園動物に見られる疾病',url:'https://www.merckvetmanual.com/exotic-and-laboratory-animals/zoo-animals/common-disorders-and-procedures-of-zoo-animals'},
+ rat:{title:'MSD · ラットの疾病',url:'https://www.merckvetmanual.com/all-other-pets/rats/disorders-and-diseases-of-rats'},
+ poultry:{title:'FAO · 採卵後の鶏の流通',url:'https://www.fao.org/4/y4628e/y4628e09.htm'},
+ turtle:{title:'NOAA · ウミガメと混獲',url:'https://www.fisheries.noaa.gov/sea-turtles'},
+ shark:{title:'NZ DOC · ジンベエザメへの脅威',url:'https://www.doc.govt.nz/nature/native-animals/marine-fish-and-reptiles/sharks-rays/whale-shark/'},
+ otter:{title:'USGS · ラッコの死亡要因',url:'https://www.usgs.gov/news/featured-story/slowly-swimming-towards-recovery-californias-sea-otter-numbers-holding-steady'},
+ penguin:{title:'Australian Antarctic Program · ペンギンの天敵',url:'https://www.antarctica.gov.au/about-antarctica/animals/penguins/'},
+ koala:{title:'NSW · コアラの病気・交通事故',url:'https://www.environment.nsw.gov.au/topics/animals-and-plants/threatened-species/programs-legislation-and-framework/nsw-koala-strategy/improving-health-and-safety-koalas'},
+ jelly:{title:'Natural History Museum · クラゲの捕食者',url:'https://www.nhm.ac.uk/discover/what-is-a-jellyfish.html'},
+ octopus:{title:'Smithsonian · 頭足類の生活史',url:'https://ocean.si.edu/ocean-life/invertebrates/octopuses-squids-and-relatives'},
+ insect:{title:'Smithsonian · 昆虫の捕食',url:'https://www.si.edu/newsdesk/releases/predators-are-real-lowlifes'},
+ kingfisher:{title:'Animal Diversity Web · カワセミ類の死亡要因',url:'https://animaldiversity.org/accounts/Alcedinidae/'}
+};
 function deathOptions(a){
- const option=(cause,text)=>({cause,text});
- const old=option('老衰','長く暮らした場所で、体の働きが少しずつ衰えていきました。やがて老衰で死亡し、その一生を終えました。');
- const illness=option('病気','病気で体力が落ち、休む時間が増えました。その後も回復せず、病気のため死亡しました。');
- const injury=option('けが','暮らしの中で負ったけがから回復できず、死亡しました。その命の時間は、ここで終わりました。');
- if(a.id==='chicken')return [option('食肉処理','出荷の日が来ました。食肉処理によって死亡し、あなたの体は人の食べ物になりました。食用鶏として育てられた一生が、ここで終わりました。')];
- if(a.id==='chicken-layer')return [option('食肉処理','産卵する役割を終え、農場から出荷されました。この物語では、その後の食肉処理によって死亡し、体は食用に利用されました。')];
- const specific={
-  'dog-neglect':[
-   option('病気','保護されたあとも、健康への影響が残っていました。世話を受けながら暮らしましたが、最後は病気から回復できず、死亡しました。'),
-   option('老衰','晩年を過ごした家には、水と眠る場所がありました。覚えた手のにおいのそばで、老衰のため死亡しました。')],
-  'cat-rich':[
-   option('老衰','窓から午後の日が差していました。家の人に見守られながら老衰で死亡しました。恵まれた暮らしにも、最後の時が来ました。'),
-   option('病気','病院で治療を受けましたが、病気は治りませんでした。慣れた家で世話を受けながら、病気のため死亡しました。')],
-  'dog-family':[option('老衰','散歩が短くなり、眠る時間が増えていました。家の人のそばで、老衰のため死亡しました。'),illness],
-  'dog-shelter':[option('老衰','迎えられた家で、長く使った毛布の上にいました。世話をしてくれる人のそばで、老衰のため死亡しました。'),illness],
-  'dog-street':[option('交通事故','食べ物を探して道を渡ったとき、車にはねられました。そのけがによって死亡しました。'),illness],
-  'horse-race':[option('老衰','競走を離れ、その後の暮らしも長く続きました。最後は引退先で老衰のため死亡しました。'),illness],
-  'monkey-lab':[option('病気','研究施設で世話を受けていましたが、病気が進み、死亡しました。飼育記録に、あなたが死亡した日付が記されました。'),option('老衰','研究施設で年を重ね、体の動きが少なくなっていきました。最後は老衰のため死亡し、飼育記録が閉じられました。')],
-  'rat-pet':[option('老衰','餌も水も届く、慣れた飼育場所で過ごしました。最後は老衰のため死亡し、世話をしていた人があなたを見送りました。'),illness]
+ const d=(cause,text,ref)=>({cause,text:text+'死亡しました。',reference:ref?DEATH_REFERENCES[ref]:null});
+ const disease=d('病気','感染症などによって体が弱り、回復できないまま、');
+ const hunger=d('餌不足','食べ物を十分に得られない日が続き、衰弱して、');
+ const prey=(who,ref)=>d('捕食',who+'に捕らえられ、食べられて、',ref);
+ const road=d('交通事故','移動中に道路を横切り、車にはねられたけがで、');
+ const zoo=[d('病気','世話と治療を受けましたが、病気から回復できず、','zoo'),d('加齢に伴う病気','年を重ねて臓器の働きが衰え、治療を受けても回復せず、','zoo')];
+ if(a.id==='chicken'||a.id==='chicken-layer')return [d('食肉処理',a.id==='chicken'?'出荷の日が来ました。食肉処理によって、':'産卵の役割を終えて出荷され、食肉処理によって、','poultry')];
+ if(a.species==='馬')return [d('重い疝痛','腸の病気で激しい腹痛が起きました。治療を受けましたが、回復できず、','horse'),d('加齢に伴う病気','年を重ねて体が弱り、病気から回復できないまま、','zoo')];
+ if(a.species==='犬')return a.id==='dog-street'?[road,disease]:[d('がん','体の中でがんが進みました。治療や世話を受けましたが、回復できず、','pets'),d('心臓の病気','心臓の病気が進み、体を支えられなくなって、','pets')];
+ if(a.species==='猫')return a.id==='cat-rich'?[d('慢性腎臓病','腎臓の働きが少しずつ低下しました。治療を受けながら暮らしましたが、病気が進み、','cat'),d('がん','がんが進行し、治療を受けても回復できず、','pets')]:[road,disease,d('慢性腎臓病','腎臓の働きが低下し、体が衰弱して、','cat')];
+ if(a.id==='rat-pet')return [d('呼吸器の感染症','呼吸器の感染症が悪化しました。世話と治療を受けましたが、回復できず、','rat'),d('腫瘍に伴う衰弱','腫瘍が大きくなり、体力が落ち、回復できず、','rat')];
+ if(a.id==='monkey-lab')return [d('病気','研究施設で健康管理を受けていましたが、病気から回復できず、','zoo')];
+ // Explicit setting classification prevents zoo birds or managed animals receiving wild predation endings.
+ if(/動物園|飼育場|放飼場/.test(a.habitat)||['elephant-zoo','giraffe-zoo'].includes(a.id))return zoo;
+ const profiles={
+ 'ドブネズミ':[prey('街で狩りをする猫や猛禽類'),disease],
+ 'スズメ':[prey('猛禽類や猫'),hunger],
+ 'クロオオアリ':[prey('アリを食べるクモやほかの小動物','insect'),d('寿命に伴う衰弱','働きアリとして活動を続け、やがて体の働きが衰えて、')],
+ '土壌の線虫':[prey('土の中の捕食性の小動物'),d('乾燥による衰弱','土が乾き、体を保つ水分を失って、')],
+ 'イワシ':[prey('大型の魚や海鳥'),d('漁獲','群れごと漁船の網にかかり、水から引き上げられ、その後の食用の処理で、')],
+ '鶏':[d('病気','庭の鶏舎で暮らしていましたが、感染症などで体が弱り、'),d('加齢に伴う病気','長く暮らすうちに体の働きが衰え、病気から回復できず、')],
+ 'アジアゾウ':[disease,d('餌不足による衰弱','十分な植物を食べられない日が続き、体力を失って、')],
+ 'カニクイザル':[disease,prey('森の大型の捕食者')],
+ 'キリン':[prey('ライオン'),disease],
+ 'ライオン':[d('同種との争いによるけが','別のライオンとの争いで重い傷を負い、狩りや採食が難しくなって、'),hunger,disease],
+ 'アムールトラ':zoo,
+ 'チーター':[hunger,d('ほかの肉食獣による攻撃','別の肉食獣に襲われ、負った傷から回復できず、'),disease],
+ 'ホッキョクグマ':[hunger,disease],
+ 'ジャイアントパンダ':zoo,'レッサーパンダ':zoo,
+ 'コアラ':[d('クラミジア感染症','クラミジアによる病気が重くなり、体力が落ちて、','koala'),{...road,reference:DEATH_REFERENCES.koala}],
+ 'ミーアキャット':[prey('猛禽類やジャッカル'),disease],
+ 'カピバラ':[prey('ジャガーやカイマン'),disease],
+ 'ユーラシアカワウソ':[road,disease],
+ 'ラッコ':[d('サメによる咬傷','サメにかまれて重い傷を負い、その傷によって、','otter'),d('感染症','感染症によって体が弱り、回復できず、','otter')],
+ 'ニホンジカ':[hunger,road,disease],
+ 'コウテイペンギン':[prey('ヒョウアザラシ','penguin'),hunger],
+ 'フンボルトペンギン':zoo,'フラミンゴ':zoo,
+ 'ハシビロコウ':[disease,hunger],
+ 'カワセミ':[d('衝突事故','飛んでいるときに人工物へ衝突し、重いけがで、','kingfisher'),prey('猛禽類','kingfisher')],
+ 'セキセイインコ':[prey('猛禽類'),hunger],
+ 'ガラパゴスゾウガメ':[disease,d('干ばつによる餌不足','雨の少ない時期が続き、草や水を十分に得られず衰弱して、')],
+ 'アオウミガメ':[d('混獲による溺死','漁具に絡まり、水面へ息をしに戻れなくなって、','turtle')],
+ 'ニホンアマガエル':[prey('ヘビや鳥'),d('乾燥による衰弱','乾燥が続き、湿った場所にたどり着けず、')],
+ 'ジンベエザメ':[d('漁具への混獲','漁具にかかり、逃れられないまま、','shark'),d('船との衝突','海面近くを泳いでいたときに船と衝突し、そのけがで、','shark')],
+ 'カクレクマノミ':[prey('サンゴ礁の大型の魚'),disease],
+ 'マダコ':[prey('大型の魚'),d('漁獲','漁具にかかって引き上げられ、その後の食用の処理で、'),d('寿命に伴う衰弱','成熟した体の働きが衰え、餌を取らなくなり、','octopus')],
+ 'ミズクラゲ':[prey('クラゲを食べる魚など','jelly')],
+ 'ナミアゲハ':[prey('鳥やクモ','insect'),d('寿命に伴う衰弱','成虫として過ごすうちに体が衰え、飛べなくなって、')],
+ 'カブトムシ':[prey('鳥や小型の哺乳類','insect'),d('寿命に伴う衰弱','成虫として夏を過ごし、やがて体の働きが衰えて、')],
+ 'セイヨウミツバチ':[prey('クモやスズメバチ','insect'),d('寿命に伴う衰弱','働きバチとして花と巣を行き来するうちに体が消耗し、やがて飛べなくなって、')]
  };
- if(specific[a.id])return specific[a.id];
- const captive=a.id==='horse'||/zoo|club|university|pet/.test(a.id)||/飼育員|世話をされ|動物園|家庭|乗馬|馬術|管理され/.test(a.care+' '+a.habitat);
- const results=[old,illness,injury];
- if(!captive){
-  const prey=new Set(['ドブネズミ','スズメ','クロオオアリ','土壌の線虫','イワシ','猫','ニホンジカ','カピバラ','ミーアキャット','ユーラシアカワウソ','コウテイペンギン','フンボルトペンギン','フラミンゴ','カワセミ','アオウミガメ','ニホンアマガエル','カクレクマノミ','マダコ','ミズクラゲ','ナミアゲハ','カブトムシ','セイヨウミツバチ']);
-  if(prey.has(a.species))results.push(option('捕食','食べ物を探しているとき、捕食者に捕らえられました。食べられて死亡し、その体は別の命を支えるものになりました。'));
-  if(a.id==='fish')results.push(option('漁獲','群れを追う漁船の網にかかりました。水から引き上げられて死亡し、その後、人の食用として利用されました。'));
- }
- // An individual that dies before metamorphosis has not completed an adult lifespan.
- return a.adultAge&&life.span<a.adultAge?results.filter(r=>r.cause!=='老衰'):results;
+ const options=profiles[a.species]||[disease];
+ return a.adultAge&&life.span<a.adultAge?options.filter(o=>o.cause!=='寿命に伴う衰弱'):options;
 }
-function deathOutcome(a){return pick(deathOptions(a))}
+function deathOutcome(a){return {...pick(deathOptions(a)),modelVersion:2}}
 function deathPrelude(death,a){
- const cause=death.cause;
- if(cause==='捕食')return 'いつものように過ごしていたとき、近くに天敵の気配を感じました。危険が迫っています。';
- if(cause==='餌不足')return '食べ物を探しても、十分には見つかりません。体力が少しずつ失われていきます。';
- if(cause==='病気')return '体に異変が起こりました。これまでどおりに動くことが難しくなっていきます。';
- if(cause==='人による処理')return 'いつもとは違う場所へ移されました。これから何が起こるのか、あなたには分かりません。';
- if(cause==='環境による衰弱')return '周囲の環境が変わり、これまでのように暮らすことが難しくなりました。';
- return 'これまでできていたことが、少しずつ難しくなりました。休む時間が長くなっています。';
+ if(death.cause==='捕食')return 'いつも暮らす場所で、近くに捕食者の気配がありました。';
+ if(/漁獲|混獲/.test(death.cause))return '海の中で、漁具から逃れられなくなりました。';
+ if(death.cause==='食肉処理')return '飼育場所から出荷されました。';
+ if(/交通|衝突|咬傷|攻撃|争い/.test(death.cause))return '暮らしの中で、突然の危険に遭いました。';
+ if(/餌不足|乾燥/.test(death.cause))return '周囲の環境が変わり、体を保つことが難しくなっていきます。';
+ if(death.cause==='重い疝痛')return '強い腹痛が起きました。世話をする人が獣医師を呼びました。';
+ return '体の調子が変わり、これまでのようには動けなくなっていきます。';
 }
+function deathSourcesHtml(a){const refs=[...new Map(deathOptions(a).filter(o=>o.reference).map(o=>[o.reference.url,o.reference])).values()];return `<details class="ecology"><summary>この境遇の死因について</summary><p class="note">種類と暮らす環境に合う疾病・捕食・事故などから結末を作成しています。候補：${deathOptions(a).map(o=>esc(o.cause)).join('、')}。地域・年齢によって頻度は異なり、抽選比率は実際の死亡率を再現していません。</p>${refs.map(r=>`<p class="note"><a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.title)}</a></p>`).join('')}</details>`}
 function finish(){
  if(life.ended)return;
  stop();life.progress=1;life.ended=true;
@@ -110,7 +151,7 @@ function finish(){
   $('#clockStatus').textContent='一生を終えました';
  }else ending();
 }
-function ending(){view='ending';const a=animal();app.innerHTML=`<main class="ending"><p>${title()}<span class="small">一生の記録</span></p><div class="panel"><small>ひとつの命が、ここにありました。</small><h1>${a.species}として生きた、<br>${ageAt()}。</h1><p>${a.place} · ${a.habitat}</p><p class="summaryquote">${a.quote}</p><p><strong>死因：${esc(life.death?.cause||"不明")}</strong></p><p>${esc(life.death?.text||a.ending)}</p><div class="section"><h3>この命に、ひとこと</h3><label for="lastWords" class="small">残した言葉は、このブラウザにだけ保存されます。</label><textarea id="lastWords" maxlength="500" placeholder="ここにいた、あなたへ。">${esc(life.lastWords||'')}</textarea><div class="choices" style="margin-top:15px"><button id="save" class="primary">メモリアルに残す</button><button id="download">記録をダウンロード</button><button id="return">最初の画面へ</button></div><p class="small" id="savedMessage" role="status"></p></div><details><summary>一生の記録を読み返す</summary><div>${feedHtml()}</div></details><p class="note">この一生の出来事と寿命は創作です。すべての${a.species}が同じ境遇を生きるわけではありません。</p></div></main>`;wireStars();$('#save').onclick=()=>{life.lastWords=$('#lastWords').value.trim();const m={serial:life.serial,species:a.species,place:a.habitat,age:ageAt(),quote:life.lastWords||a.quote,events:life.events,reflections:life.reflections};const i=memories.findIndex(x=>x.serial===m.serial);if(i>=0)memories[i]=m;else memories.unshift(m);memories=memories.slice(0,50);persist();$('#savedMessage').textContent='このブラウザのメモリアルに記録しました。'};$('#download').onclick=()=>{life.lastWords=$('#lastWords').value.trim();persist();const content=`数垓分の1 — 一生の記録\n${a.species} · ${a.habitat} · ${ageAt()}\n\n${life.events.map(e=>ageAt(e.p)+'　'+e.text).join('\n\n')}\n\nあなたのひとこと：${life.lastWords||''}\n\nこの記録はフィクションです。`;const url=URL.createObjectURL(new Blob([content],{type:'text/plain;charset=utf-8'}));const link=document.createElement('a');link.href=url;link.download='ひとつの命-'+life.serial+'.txt';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};$('#return').onclick=()=>{home();window.scrollTo(0,0)};window.scrollTo(0,0)}
+function ending(){view='ending';const a=animal();app.innerHTML=`<main class="ending"><p>${title()}<span class="small">一生の記録</span></p><div class="panel"><small>ひとつの命が、ここにありました。</small><h1>${a.species}として生きた、<br>${ageAt()}。</h1><p>${a.place} · ${a.habitat}</p><p class="summaryquote">${a.quote}</p><p><strong>死因：${esc(life.death?.cause||"不明")}</strong></p><p>${esc(life.death?.text||a.ending)}</p><div class="section"><h3>この命に、ひとこと</h3><label for="lastWords" class="small">残した言葉は、このブラウザにだけ保存されます。</label><textarea id="lastWords" maxlength="500" placeholder="ここにいた、あなたへ。">${esc(life.lastWords||'')}</textarea><div class="choices" style="margin-top:15px"><button id="save" class="primary">メモリアルに残す</button><button id="download">記録をダウンロード</button><button id="return">最初の画面へ</button></div><p class="small" id="savedMessage" role="status"></p></div><details><summary>一生の記録を読み返す</summary><div>${feedHtml()}</div></details><p class="note">この一生の出来事と寿命は創作です。すべての${a.species}が同じ境遇を生きるわけではありません。</p></div></main>`;wireStars();$('#save').onclick=()=>{life.lastWords=$('#lastWords').value.trim();const m={serial:life.serial,species:a.species,place:a.habitat,age:ageAt(),death:life.death,quote:life.lastWords||a.quote,events:life.events,reflections:life.reflections};const i=memories.findIndex(x=>x.serial===m.serial);if(i>=0)memories[i]=m;else memories.unshift(m);memories=memories.slice(0,50);persist();$('#savedMessage').textContent='このブラウザのメモリアルに記録しました。'};$('#download').onclick=()=>{life.lastWords=$('#lastWords').value.trim();persist();const content=`数垓分の1 — 一生の記録\n${a.species} · ${a.habitat} · ${ageAt()}\n\n${life.events.map(e=>ageAt(e.p)+'　'+e.text).join('\n\n')}\n\nあなたのひとこと：${life.lastWords||''}\n\nこの記録はフィクションです。`;const url=URL.createObjectURL(new Blob([content],{type:'text/plain;charset=utf-8'}));const link=document.createElement('a');link.href=url;link.download='ひとつの命-'+life.serial+'.txt';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};$('#return').onclick=()=>{home();window.scrollTo(0,0)};window.scrollTo(0,0)}
 function wireMemories(){document.querySelectorAll('[data-mem]').forEach(b=>b.onclick=()=>{const m=memories[Number(b.dataset.mem)];showModal(`<small>メモリアル · このブラウザの記録</small><h2>${esc(m.species)} · ${esc(m.age)}</h2><p>${esc(m.place)}</p><p class="summaryquote">${esc(m.quote)}</p>${m.events.map(e=>`<p>${esc(e.text)}</p>`).join('')}`)})}
 function drawScene(){if(animal().bodyType){drawBiodiversityScene($('#scene'),animal(),life.span*life.progress);return}const c=$('#scene'),g=c.getContext('2d'),a=animal();g.imageSmoothingEnabled=false;function rect(x,y,w,h,col){g.fillStyle=col;g.fillRect(x,y,w,h)}const ocean=a.id==='fish',soil=['nematode','ant','rat'].includes(a.id),indoor=['cat-rich','monkey-lab','chicken','chicken-layer','rat-pet'].includes(a.id);rect(0,0,750,250,ocean?'#86b6c2':soil?'#adae9e':indoor?'#d5d8cb':'#b8d5da');if(ocean){for(let i=0;i<14;i++)rect(i*61,25+i%3*40,35,3,'#b9d8d8');rect(0,218,750,32,'#7e9d8d');for(let i=0;i<10;i++)rect(i*85,190,5,60,'#5f8b72')}else if(soil){rect(0,145,750,105,'#8b806a');for(let i=0;i<40;i++)rect(i*23%750,155+i*13%90,7,4,'#aaa18a');rect(0,80,750,25,'#787d70');rect(0,105,750,7,'#5b625b');if(a.id!=='rat'){rect(0,0,750,40,'#758477');for(let i=0;i<18;i++)rect(i*47,22,5,40,'#5c7563')}}else if(indoor){rect(0,180,750,70,'#a8b2a0');rect(0,178,750,5,'#8c998d');for(let x=35;x<700;x+=190){rect(x,20,125,128,'#8c9c96');rect(x+6,26,113,115,'#c9e0de');rect(x+59,26,5,115,'#8c9c96');rect(x+6,82,113,5,'#8c9c96')}if(a.species==='猫'){rect(480,165,180,50,'#a79083');rect(495,149,147,30,'#bba69a');rect(498,211,10,22,'#776859');rect(638,211,10,22,'#776859')}if(a.id==='monkey-lab'){for(let x=280;x<520;x+=35)rect(x,35,4,150,'#909e94');rect(265,32,270,5,'#7f8d84');rect(265,155,270,5,'#7f8d84')}}else{rect(0,170,750,80,'#9eae84');rect(0,163,750,10,'#7e987b');for(let i=0;i<6;i++){rect(i*145+25,100,10,65,'#8a8b75');rect(i*145+10,65,50,40,'#88a68e')}rect(0,135,750,5,'#9c9c85');for(let x=20;x<750;x+=90)rect(x,125,7,50,'#8a907b');for(let i=0;i<4;i++){rect(50+i*180,35,80,15,'#e8efea');rect(65+i*180,25,50,15,'#e8efea')}}
 const x=360,y=177,col=a.color;function block(px,py,w,h){rect(x+px,y+py,w,h,col)}if(a.id==='fish'){for(let i=0;i<6;i++){rect(150+i*80,90+(i%3)*30,35,14,col);rect(140+i*80,86+(i%3)*30,12,22,col);rect(177+i*80,93+(i%3)*30,3,3,'#344d56')}}else if(a.id==='nematode'){for(let i=0;i<15;i++)rect(280+i*10,180+Math.round(Math.sin(i*.5)*9),12,6,col)}else if(a.id==='ant'){for(let j=0;j<4;j++){const xx=180+j*110;for(let i=0;i<3;i++)rect(xx+i*9,190,8,7,col);for(let i=0;i<3;i++)rect(xx+4+i*7,197,3,9,col)}}else if(a.species==='キリン'){rect(333,154,72,30,col);rect(386,71,15,91,col);rect(385,64,37,20,col);rect(338,180,7,45,col);rect(387,180,7,45,col);rect(392,57,4,12,col);rect(409,57,4,12,col);rect(414,69,3,3,'#293b31');for(let i=0;i<8;i++)rect(339+i*8,160+i%2*9,5,7,'#8b6540');for(let i=0;i<5;i++)rect(390,91+i*13,6,6,'#8b6540')}else if(a.species==='スズメ'||a.species==='鶏'){rect(340,161,45,34,col);rect(367,144,26,25,col);rect(390,154,14,6,'#b89c55');rect(383,150,4,4,'#283535');rect(348,170,20,16,a.id==='sparrow'?'#755840':'#e1ba73');rect(329,159,15,8,col);rect(350,193,3,15,'#997b4c');rect(374,193,3,15,'#997b4c');rect(346,206,10,3,'#997b4c');rect(370,206,10,3,'#997b4c')}else{const ele=a.species==='アジアゾウ',horse=a.species==='馬',bird=['chicken','sparrow'].includes(a.id);const s=ele?2:1;block(-25*s,-20*s,65*s,30*s);block(29*s,-35*s,25*s,30*s);block(36*s,-43*s,9*s,12*s);block(-20*s,8*s,8*s,25*s);block(22*s,8*s,8*s,25*s);rect(x+43*s,y-29*s,4*s,4*s,'#283535');if(ele){block(50*s,-18*s,8*s,30*s);block(43*s,4*s,14*s,7*s);rect(x+27*s,y-31*s,16*s,21*s,'#a0aaa5')}else if(horse){block(19,-45,15,45);block(-33,-16,9,42);rect(x+20,y-40,6,33,'#654b39')}else if(bird){rect(x+53,y-26,12,5,'#b69d58');rect(x-9,y-8,24,12,'#b2a18a')}else if(a.id==='monkey-lab'){block(-32,-10,8,35);block(-38,10,15,8);rect(x+30,y-31,20,16,'#bca68a')}else{block(-36,-22,15,6);block(-44,-30,8,14);if(a.species==='猫'){rect(x+31,y-41,8,8,col);rect(x+48,y-41,8,8,col)}}}rect(0,241,750,9,'#748478')}
