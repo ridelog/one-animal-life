@@ -58,7 +58,7 @@ function detailedDeathOptions(a,legacy){
  const mature=!(a.adultAge&&(life?.animalId===a.id?life.span:a.span)<a.adultAge);
  const livedLong=(life?.animalId===a.id?life.span:a.span)>=a.span*.75;
  const ageAllowsSenescence=a.species!=='ジンベエザメ'||mortalityAge(a)>=70;
- if(captive&&mature&&livedLong&&ageAllowsSenescence&&!options.some(o=>o.kind==='aging'))options.push({cause:'老衰（寿命に伴う全身の衰弱）',kind:'aging',prelude:'年を重ね、少しずつ体を保つ力が弱くなっていきました。',text:'年を重ね、食べる量や動ける時間が少しずつ減りました。慣れた場所で世話を受けながら過ごし、最後は寿命に伴う全身の衰弱で死亡しました。',reference:DISEASE_SOURCES.zoo});
+ if(captive&&mature&&livedLong&&ageAllowsSenescence&&!options.some(o=>o.kind==='aging'))options.push({cause:'老衰',kind:'aging',prelude:'年を重ね、少しずつ体を保つ力が弱くなっていきました。',text:'穏やかに息を引き取った。',reference:DISEASE_SOURCES.zoo});
  if(!options.length)options.push({cause:'環境の変化による衰弱',kind:'external',prelude:'周囲の環境が変わり、体を保つことが難しくなりました。',text:'周囲の環境の変化に体が対応できず、衰弱して死亡しました。'});
  return options;
 }
@@ -82,4 +82,16 @@ function upgradeDeath(old,a){
  const illness=options.filter(o=>o.kind==='illness');const pool=/病|感染|疝痛|がん|腫瘍/.test(old.cause)&&illness.length?illness:options;
  const hash=[...(life.serial||a.id)].reduce((n,c)=>(n*31+c.charCodeAt(0))>>>0,0);
  return {...pool[hash%pool.length],modelVersion:MORTALITY_VERSION};
+}
+
+function simplifyAgingRecords(){
+ const ending='穏やかに息を引き取った。';
+ const old='年を重ね、食べる量や動ける時間が少しずつ減りました。慣れた場所で世話を受けながら過ごし、最後は寿命に伴う全身の衰弱で死亡しました。';
+ for(const record of [life,...memories]){
+  if(!record)continue;
+  const aging=record.death?.cause?.startsWith('老衰');
+  if(aging){record.death.cause='老衰';record.death.text=ending;}
+  for(const event of record.events||[])if(event.text===old||(aging&&event.p===1&&event.tag?.includes('死亡')))event.text=ending;
+ }
+ for(const entry of deathHistory)if(entry.cause?.startsWith('老衰'))entry.cause='老衰';
 }
