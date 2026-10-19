@@ -26,7 +26,7 @@ function trialPool(a,p){
    ]);return [moving,illness,food];
   }
   if(a.species==='馬'){
-   const colic=encounter('colic','強い腹痛', '腹が痛み、落ち着いて立っていられない。世話をする人が異変に気づき、獣医師を呼んだ。',[
+   const colic=encounter('colic','大腸の便秘性疝痛（腹痛）', '大腸に内容物がたまる便秘性疝痛が起きた。腹が痛み、落ち着いて立っていられない。世話をする人が異変に気づき、獣医師を呼んだ。',[
     opt('静かな場所で立ち止まる',.8,'診察と処置を受け、腸の状態が落ち着いた。しばらく食事と運動を制限して過ごした。','症状が重く、治療は長引いた。回復後もしばらく運動を休むことになった。',{health:-4},{health:-22,food:-10}),
     opt('落ち着かず体を動かす',.55,'人が安全な場所へ誘導し、診察を受けた。時間をかけて腹痛が治まった。','消耗が大きく、集中的な治療と長い休養が必要になった。',{health:-7},{health:-28,safety:-8})
    ]);return [colic,illness,food];
@@ -79,7 +79,12 @@ function ensureTrials(){
   let p=Number((low+Math.random()*(start<.2?.055:.008)).toFixed(4));
   while(occupied.some(v=>Math.abs(v-p)<.0001))p=Number((p+.0003).toFixed(4));
   const pool=trialPool(animal(),p).filter(t=>!used.has(t.id));const trial=pick(pool.length?pool:trialPool(animal(),p));used.add(trial.id);
-  life.trials.push({...trial,p,roll:Math.random(),done:false});occupied.push(p);
+  let selected={...trial,options:trial.options.map(o=>({...o}))};
+  if(trial.id==='illness'){
+   const diagnosed=pick(namedIllnesses(animal(),mortalityAge(animal())*p));
+   if(diagnosed){selected.title=diagnosed.cause;selected.body=diagnosed.symptoms+'。'+trial.body;selected.options=selected.options.map(o=>({...o,good:diagnosed.cause+'の症状が落ち着き始めた。'+o.good,bad:diagnosed.cause+'からの回復は遅れた。'+o.bad}));selected.diagnosis=diagnosed.cause;}
+  }
+  life.trials.push({...selected,p,roll:Math.random(),done:false});occupied.push(p);
  }
 }
 function showTrial(){
