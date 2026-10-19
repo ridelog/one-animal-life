@@ -115,10 +115,15 @@ function ensureNarrative(){
  // The final short beat fills the last gap without introducing another unresolved crisis.
  if(slot<slots.length)entries.push({id:'settled',p:slots[slot],text:kind==='sea'||kind==='aquarium'?'餌の取り方や過ごす海水は、これまでに何度も変わった。その変化を経た体で、次の時間へ進んだ。':'休む場所や食べ物、人やほかの個体との距離は、これまでに何度も変わった。その変化を経た体で、次の時間へ進んだ。',tag:'積み重なった時間'});
  if(slot+1<slots.length)entries.push({id:'last-chapter',p:slots[slot+1],text:kind==='farm'?'同じ場所にいた仲間の顔ぶれも変わった。担当者が近づくと、その動きに反応して体を起こした。':'体を休める時間が長くなった。餌を取れるときに取り、慣れた環境の中で次の動きを待った。',tag:'晩年'});
+ if(a.species==='アオウミガメ'&&a.setting==='wild'){
+  const encounter=entries.find(e=>e.id==='detail-2');
+  if(encounter){encounter.text='海草のある海にも、薄いビニール袋や細かなごみが漂っていた。餌を取る場所が、人の捨てたものと重なっていた。';encounter.tone='hard';encounter.background={title:'アオウミガメの食性と海洋ごみ',url:'https://www.fisheries.noaa.gov/species/green-turtle'};}
+ }
 }
 function trialAftermath(trial){
  const safe=trial.success;
  const lines={
+  plastic:['漂流物のあった場所を離れ、海草のある場所で餌を取った。海にはほかにも、人が捨てたものが流れていた。','また海草を食べられるようになった。それでも、餌とごみが同じ場所へ集まる環境は変わらなかった。'],
   keeperIncident:safe?['事故のあと、人と直接触れ合う機会が減った。隔ての向こうから、いつもの餌が届いた。','人と距離を取った世話が続いた。暮らす場所は同じでも、人との関わり方は以前とは変わった。']:['事故のあと、使える場所が限られた。扉の向こうから人の声がした。','安全管理の方法が変更され、以前とは違う区画で過ごす時間が長くなった。'],
   predator:safe?['危険を避けたあと、その場所で餌を取る動きが減った。別の場所で採食した。','逃れた危険のあとも、食べる必要は変わらなかった。周囲の気配を確かめながら動いた。']:['逃げるときに負った傷が、動きの負担になった。遠くへ行かずに餌を探した。','傷の状態は落ち着いてきたが、体力はすぐには戻らなかった。休む時間を増やした。'],
   capture:safe?['人の仕掛けのある場所から離れた。慣れた採食の道が、一つ使えなくなった。','別の場所で餌を見つけた。遠回りする暮らしが続いた。']:['仕掛けから抜け出したあとの傷が残った。十分に食べられない時間が続いた。','体の状態が少し戻り、仕掛けのあった場所から離れて採食した。'],

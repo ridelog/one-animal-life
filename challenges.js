@@ -65,6 +65,12 @@ function trialPool(a,p){
   opt(aquatic?'仕掛けから離れる':'餌に近づかず迂回する',.85,'仕掛けから離れ、安全な場所へ戻った。その日は十分な餌を取れなかった。','離れようとして仕掛けに触れ、体を傷めた。時間をかけて抜け出した。',{food:-7,safety:-4},{health:-18,safety:-15}),
   opt(aquatic?'狭い隙間を進む':'近くの餌を確かめる',.4,'仕掛けに気づき、すぐに引き返した。','仕掛けに捕らわれた。もがいた末に抜け出せたが、けがと強い警戒が残った。',{food:-3,safety:-8},{health:-27,safety:-25})
  ]);
+ if(a.species==='アオウミガメ'&&a.setting==='wild'){
+  const plastic=encounter('plastic','餌に似た漂流物','海草のある場所の近くに、薄いものが揺れている。人が捨てたビニール袋だが、餌との違いは簡単には分からない。',[
+   opt('近づかずに泳ぎ去る',.95,'漂流物から離れ、海草のある場所へ戻った。袋を飲み込まずに済んだ。','離れようとして袋に触れ、動きを妨げられた。やっと振りほどき、海草のある場所へ戻った。',{safety:-3},{health:-8,safety:-10}),
+   opt('口で確かめる',.45,'口に触れた感触が違い、飲み込まずに離した。','袋を口に入れたが、飲み込む前に吐き出した。口の中を傷め、餌を食べにくい時間が続いた。',{safety:-6},{health:-16,food:-12})
+  ]);return [plastic,capture,illness,food];
+ }
  if(insect||a.species==='土壌の線虫')return [predator,food];
  if(top)return [food,illness,capture];
  return [predator,capture,illness,food];

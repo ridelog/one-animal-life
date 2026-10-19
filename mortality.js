@@ -52,6 +52,7 @@ function detailedDeathOptions(a,legacy){
  const nonmedical=/^(捕食|餌不足|餌不足による衰弱|干ばつによる餌不足|交通事故|衝突事故|漁獲|混獲による溺死|漁具への混獲|船との衝突|サメによる咬傷|ほかの肉食獣による攻撃|同種との争いによるけが|乾燥による衰弱|食肉処理|寿命に伴う衰弱)$/;
  const options=legacy.filter(o=>nonmedical.test(o.cause)).map(o=>({...o,kind:o.cause==='食肉処理'?'production':o.cause==='寿命に伴う衰弱'?'aging':'external'}));
  if(a.farmUse==='production'||a.id==='chicken'||a.id==='chicken-layer')return options;
+ if(a.species==='アオウミガメ'&&a.setting==='wild')options.push({cause:'ビニール袋の誤飲による腸閉塞',kind:'external',prelude:'餌を取る海にも、人の捨てたビニール袋が漂うようになりました。',text:'海を漂うビニール袋を餌と見誤り、飲み込みました。袋が消化管に詰まって腸閉塞を起こし、十分に餌を取れなくなりました。その後、衰弱が進んで死亡しました。',reference:{title:'NOAA · 海洋ごみの誤飲と腸閉塞',url:'https://marinedebris.noaa.gov/why-marine-debris-problem/ingestion'}});
  options.push(...namedIllnesses(a));
  const captive=a.setting==='zoo'||a.setting==='managed';
  const mature=!(a.adultAge&&(life?.animalId===a.id?life.span:a.span)<a.adultAge);
